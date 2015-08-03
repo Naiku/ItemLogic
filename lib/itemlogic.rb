@@ -90,14 +90,14 @@ class Itemlogic
     _options = options.dup
     _options[:query] ||= {}
 
-    page = 1
+    page = 0
     results = []
     begin
-      _options[:query][:page] = page
+      _options[:query][:page] = page + 1
       response = self.send(resource, _options)
       result = response.parsed_response || {}
       page_count = result['page_count']
-      page = result['page'] + 1
+      page = result['page']
       results.concat(result['results'])
     end while results.any? && page < page_count
     return results
