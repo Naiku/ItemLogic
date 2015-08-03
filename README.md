@@ -6,7 +6,7 @@ Usage:
 
 Add to your Gemfile:
 ```
-  gem 'itemlogic', git: 'git@github.com/tomk32/itemlogic.git'
+  gem 'itemlogic', git: 'git@github.com/Naiku/itemlogic.git'
 ```
 
 In your code you can use it like so:
