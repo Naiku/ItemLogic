@@ -9,7 +9,7 @@ class Itemlogic
     base_uri BASE_URI
     AUTH_ENDPOINT = '/oauth/token_api'
 
-    debug_output $stdout
+    # debug_output $stdout
 
     def initialize(api_credentials, options = {})
       @api_credentials = api_credentials
