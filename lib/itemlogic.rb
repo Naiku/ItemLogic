@@ -98,8 +98,9 @@ class Itemlogic
       result = response.parsed_response || {}
       page_count = result['page_count']
       page = result['page']
-      results.concat(result['results'])
-    end while results.any? && page < page_count
+      page_results = result['results'] || result['body']
+      results.concat(page_results)
+    end while results.any? && page && page < page_count
     return results
   end
 

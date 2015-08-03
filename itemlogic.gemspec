@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'itemlogic'
-  s.version     = '0.1.0'
-  s.date        = '2015-08-01'
+  s.version     = '0.1.1'
+  s.date        = '2015-08-03'
   s.summary     = "ItemLogic API"
   s.description = "Ruby gem for the ItemLogic API"
   s.authors     = ["Thomas R. Koll"]
