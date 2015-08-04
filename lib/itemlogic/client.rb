@@ -28,24 +28,26 @@ class Itemlogic
 
     def authenticate(force = false)
       @authenticated = false
-      if ! @api_credentials['access_token']
-        headers = {
-          'ContentType' => 'application/x-www-form-urlencoded;charset=UTF-8',
-          'Accept' => 'application/json',
-        }
-        response = HTTParty.post(self.class.base_uri + AUTH_ENDPOINT, {
-          headers: headers,
-          body: "client_id=%s&client_secret=%s" % [self.api_credentials['client_id'], self.api_credentials['client_secret']]
-        })
-        @options[:headers] ||= {}
-        if response.parsed_response && response.parsed_response['body']
-          self.class.default_params['access_token'] = response.parsed_response['body']['token']
-          @authenticated = true
-        else
-          raise "Could not authenticate: %s -- headers: %s" % [response.inspect, headers]
-        end
+      self.class.default_params['access_token'] = nil
+      if !force && self.class.default_params['access_token']
+        return self.class.default_params['access_token']
       end
-      return @authenticated
+      headers = {
+        'ContentType' => 'application/x-www-form-urlencoded;charset=UTF-8',
+        'Accept' => 'application/json',
+      }
+      response = HTTParty.post(self.class.base_uri + AUTH_ENDPOINT, {
+        headers: headers,
+        body: "client_id=%s&client_secret=%s" % [self.api_credentials['client_id'], self.api_credentials['client_secret']]
+      })
+      @options[:headers] ||= {}
+      if response.parsed_response && response.parsed_response['body']
+        self.class.default_params['access_token'] = response.parsed_response['body']['token']
+        @authenticated = true
+      else
+        raise "Could not authenticate: %s -- headers: %s" % [response.inspect, headers]
+      end
+      return self.class.default_params['access_token']
     end
   end
 end
