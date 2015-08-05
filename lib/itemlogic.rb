@@ -97,7 +97,7 @@ class Itemlogic
       response = self.send(resource, _options)
       result = response.parsed_response || {}
       page_count = result['page_count']
-      page = result['page']
+      page = result['page'].to_i
       page_results = result['results'] || result['body']
       results.concat(page_results)
     end while results.any? && page && page < page_count
@@ -111,6 +111,7 @@ class Itemlogic
   get :client, '/client/:client_id/view'
   get :client_banks, '/client/:client_id/banks'
   get :client_tests, '/client/:client_id/tests'
+  get :create_client_test, '/client/:client_id/test/create'
   get :bank, '/bank/:bank_id/view'
   get :bank_items, '/bank/:bank_id/items'
   # delete :delete_bank, 'bank/:id'
