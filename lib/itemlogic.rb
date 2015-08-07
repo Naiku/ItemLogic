@@ -96,7 +96,7 @@ class Itemlogic
       _options[:query][:page] = page + 1
       response = self.send(resource, _options)
       result = response.parsed_response || {}
-      if result['status'] != '200'
+      if result['status'] && result['status'] != '200'
         next
       end
       page_count = result['page_count']
