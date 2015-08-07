@@ -52,7 +52,8 @@ class Itemlogic
           path, api = api, nil
         end
         define_method(method) do |options = {}|
-          return self.api_client.class.send(command, prepare_path(path.dup, api, options), self.api_client.options.merge(options))
+          response = self.api_client.class.send(command, prepare_path(path.dup, api, options), self.api_client.options.merge(options))
+          return response.parsed_response, response
         end
       end
     end
@@ -94,8 +95,7 @@ class Itemlogic
     results = []
     begin
       _options[:query][:page] = page + 1
-      response = self.send(resource, _options)
-      result = response.parsed_response || {}
+      result, response = self.send(resource, _options)
       if result['status'] && result['status'] != '200'
         next
       end
