@@ -107,6 +107,10 @@ class Itemlogic
     return results
   end
 
+  def token_player(data = {})
+    api_client.authenticate('/oauth/token_player', data)
+  end
+
 
   # See http://help.itemlogic.com
   get :me, '/me'

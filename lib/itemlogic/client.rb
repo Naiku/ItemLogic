@@ -13,42 +13,37 @@ class Itemlogic
 
     def initialize(api_credentials, options = {})
       @api_credentials = api_credentials
-      if (api_credentials['client_secret'].blank? || api_credentials['client_id'].blank?) && api_credentials['access_token'].blank?
-        raise 'Access token or api credentials are required'
-      end
       @options = {:headers => {'User-Agent' => "Ruby Itemlogic #{VERSION}", 'Accept' => 'application/json', 'Content-Type' => 'application/json'}}
+      if token = self.authenticate()
+        self.class.default_params['access_token'] = token
+      end
     end
 
     def options(other = {})
-      if !@authenticated
-        authenticate
-      end
       @options.merge(other)
     end
 
-    def authenticate(force = false)
-      @authenticated = false
-      self.class.default_params['access_token'] = nil
-      if !force && self.class.default_params['access_token']
-        return self.class.default_params['access_token']
+    def authenticate(end_point = nil, data = {})
+      if (@api_credentials['client_secret'].blank? || @api_credentials['client_id'].blank?) && @api_credentials['access_token'].blank?
+        raise 'Access token or api credentials are required'
       end
+      end_point ||= AUTH_ENDPOINT
       headers = {
         'ContentType' => 'application/x-www-form-urlencoded;charset=UTF-8',
         'Accept' => 'application/json',
       }
-      response = HTTParty.post(self.class.base_uri + AUTH_ENDPOINT, {
+      data = URI.encode_www_form(data.merge(client_id: @api_credentials['client_id'], client_secret: @api_credentials['client_secret']))
+      response = HTTParty.post(self.class.base_uri + end_point, {
         headers: headers,
-        body: "client_id=%s&client_secret=%s" % [self.api_credentials['client_id'], self.api_credentials['client_secret']]
+        body: data
       })
-      @options[:headers] ||= {}
+
+      # if it is not the default one, exit early with that token
       if response.parsed_response && response.parsed_response['body']
-        self.class.default_params['access_token'] = response.parsed_response['body']['token']
-        @authenticated = true
+        return response.parsed_response['body']['token']
       else
-        raise "Could not authenticate: %s -- headers: %s" % [response.inspect, headers]
+        raise "Could not authenticate against %s: %s -- headers: %s" % [end_point, response.inspect, headers]
       end
-      return self.class.default_params['access_token']
     end
   end
 end
-
