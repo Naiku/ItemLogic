@@ -96,10 +96,10 @@ class Itemlogic
     begin
       _options[:query][:page] = page + 1
       result, response = self.send(resource, _options)
-      if result['status'] && result['status'] != '200'
+      if result['code'] && result['code'].to_s != '200'
         next
       end
-      page_count = result['page_count']
+      page_count = result['page_count'].to_i
       page = result['page'].to_i
       page_results = result['results'] || result['body'] || []
       results.concat(page_results)
