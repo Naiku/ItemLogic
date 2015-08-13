@@ -5,6 +5,8 @@ require 'httparty'
 require 'itemlogic/client'
 
 class Itemlogic
+  class ResponseError < Exception; end
+
   attr_accessor :api_client
 
   API_PATH = '/v1'
@@ -53,6 +55,9 @@ class Itemlogic
         end
         define_method(method) do |options = {}|
           response = self.api_client.class.send(command, prepare_path(path.dup, api, options), self.api_client.options.merge(options))
+          if response['code'] && response['code'].to_i >= 400
+            raise ResponseError.new("Error during %s %s: %s" % [command.upcase, method, response.inspect])
+          end
           return response.parsed_response, response
         end
       end
@@ -110,7 +115,6 @@ class Itemlogic
   def token_player(data = {})
     api_client.authenticate('/oauth/token_player', data)
   end
-
 
   # See http://help.itemlogic.com
   get :me, '/me'
