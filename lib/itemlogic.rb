@@ -5,7 +5,13 @@ require 'httparty'
 require 'itemlogic/client'
 
 class Itemlogic
-  class ResponseError < Exception; end
+  class ResponseError < StandardError
+    attr_accessor :message, :response
+    def initialize(message, response)
+      self.message = message
+      self.response = response
+    end
+  end
 
   attr_accessor :api_client
 
@@ -56,7 +62,7 @@ class Itemlogic
         define_method(method) do |options = {}|
           response = self.api_client.class.send(command, prepare_path(path.dup, api, options), self.api_client.options.merge(options))
           if response['code'] && response['code'].to_i >= 400
-            raise ResponseError.new("Error during %s %s: %s" % [command.upcase, method, response.inspect])
+            raise ResponseError.new("Error during %s %s: %s" % [command.upcase, method, response.inspect], response)
           end
           return response.parsed_response, response
         end
