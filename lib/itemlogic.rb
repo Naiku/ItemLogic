@@ -113,9 +113,17 @@ class Itemlogic
       page_count = result['page_count'].to_i
       page = result['page'].to_i
       page_results = result['results'] || result['body'] || []
-      results.concat(page_results)
-    end while results.any? && page && page < page_count
-    return results
+      if block
+        page_results.each(&block)
+      else
+        results.concat(page_results)
+      end
+    end while page && page < page_count
+    if block
+      return true
+    else
+      return results
+    end
   end
 
   def token_player(data = {})
