@@ -146,6 +146,8 @@ class Itemlogic
 
   get :test, "/test/:test_id/view"
   get :test_items, "/test/:test_id/items"
+  post :test_print, "/test/:test_id/print"
+  get :test_print_job, "/export/:export_id/job/:job_id"
   post :create_test_release, "/test/:test_id/release"
   get :test_release, "/test/:test_id/release/:release_id"
   get :test_release_session, "/test/:test_id/release/:release_id/session/:session_id"
