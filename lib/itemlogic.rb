@@ -142,6 +142,7 @@ class Itemlogic
   post :create_client_test, '/client/:client_id/tests/create'
   get :bank, '/bank/:bank_id/view'
   get :bank_items, '/bank/:bank_id/items'
+  get :bank_context, '/bank/:bank_id/contexts'
   # delete :delete_bank, 'bank/:id'
 
   get :test, "/test/:test_id/view"
