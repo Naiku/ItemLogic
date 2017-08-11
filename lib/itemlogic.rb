@@ -98,12 +98,22 @@ class Itemlogic
   end
 
   # Process every object for a resource.
+  # this alters the original response and some fields like :
+  # facets and highlights are missing 
   def all(resource, options = {}, &block)
     _options = options.dup
     _options[:query] ||= {}
 
     page = 0
     results = []
+    single_page = false
+    # If we send along a request for a specific page it means we want that single page only
+    unless _options[:query][:page].nil?
+      if _options[:query][:page].is_a(Integer)
+        single_page = true
+        page = _options[:query][:page].to_i - 1 # avoid changing code in the begin block :P
+      end
+    end
     begin
       _options[:query][:page] = page + 1
       result, response = self.send(resource, _options)
@@ -121,7 +131,9 @@ class Itemlogic
       else
         results.concat(page_results)
       end
-    end while page && page < page_count
+      # making sure loop will end in non single page requests
+      single_page = true if single_page == false && page == page_count
+    end while page && page < page_count && !single_page
     if block
       return true
     else
