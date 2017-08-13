@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'itemlogic'
-  s.version     = '0.1.2'
+  s.version     = '0.1.3'
   s.date        = '2015-08-03'
   s.summary     = "ItemLogic API"
   s.description = "Ruby gem for the ItemLogic API"
