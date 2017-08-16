@@ -109,7 +109,7 @@ class Itemlogic
     single_page = false
     # If we send along a request for a specific page it means we want that single page only
     unless _options[:query][:page].nil?
-      if _options[:query][:page].is_a(Integer)
+      if _options[:query][:page].to_i > 0
         single_page = true
         page = _options[:query][:page].to_i - 1 # avoid changing code in the begin block :P
       end
