@@ -126,7 +126,9 @@ class Itemlogic
       result, response = self.send(resource, _options)
       if !result.is_a?(Hash) && !resource['screenshot']
         raise "Expected %s to be a has" % result.inspect
-      end
+      end  
+      # No need to process the screenshot in the same way
+      break if resource['screenshot']
       if result['code'] && result['code'].to_s != '200'
         next
       end
