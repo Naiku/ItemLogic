@@ -46,6 +46,13 @@ class Itemlogic
     "DRAW" => "Drawing"
   }
 
+  CONTEXT_TYPES = {
+    "PASS" => "Passage",
+    "GRFX" => "Graphic",
+    "AUDI" => "Audio",
+    "VDEO" => "Video"
+  }
+
   def initialize(api_credentials)
     self.api_client = Class.new(Itemlogic::Client) do |klass|
       uri = api_credentials['base_uri'] || Itemlogic::Client::BASE_URI
@@ -155,6 +162,8 @@ class Itemlogic
   get :bank, '/bank/:bank_id/view'
   get :bank_items, '/bank/:bank_id/items'
   get :bank_context, '/bank/:bank_id/contexts'
+  get :context_view, '/context/:context_id/view'
+  get :context_screenshot, '/context/:context_id/screenshot'
   # delete :delete_bank, 'bank/:id'
 
   get :test, "/test/:test_id/view"
