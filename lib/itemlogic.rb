@@ -124,7 +124,7 @@ class Itemlogic
     begin
       _options[:query][:page] = page + 1
       result, response = self.send(resource, _options)
-      if !result.is_a?(Hash)
+      if !result.is_a?(Hash) && !resource['screenshot']
         raise "Expected %s to be a has" % result.inspect
       end
       if result['code'] && result['code'].to_s != '200'
