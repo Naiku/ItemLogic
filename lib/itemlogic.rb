@@ -129,7 +129,7 @@ class Itemlogic
         break
       end
       if !result.is_a?(Hash)
-        raise "Expected %s to be a has" % result.inspect
+        raise "Expected %s to be a hash" % [result, response.body].inspect
       end
       if result['code'] && result['code'].to_s != '200'
         next
