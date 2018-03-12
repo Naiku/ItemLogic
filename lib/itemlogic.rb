@@ -110,6 +110,9 @@ class Itemlogic
   def all(resource, options = {}, &block)
     _options = options.dup
     _options[:query] ||= {}
+    if options[:query] && options[:query][:page]
+      raise "Don't pass 'page' to Itemlogic#all"
+    end
 
     page = 0
     results = []
