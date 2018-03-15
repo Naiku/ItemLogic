@@ -104,38 +104,38 @@ class Itemlogic
     @metadata['%s_max_page_size' % resource.split('/').last.singularize] rescue 100
   end
 
-  # Process every object for a resource.
-  # this alters the original response and some fields like :
-  # facets and highlights are missing 
-  def all(resource, options = {}, &block)
+
+  # Fetch just a single page from the resource
+  def fetch_single_page(page, resource, options = {})
     _options = options.dup
     _options[:query] ||= {}
+    _options[:query][:page] = page + 1
+    result, response = self.send(resource, _options)
+    if result == false
+      return
+    end
+    if !result.is_a?(Hash)
+      raise "Expected %s to be a hash" % [result, response].inspect
+    end
+    return result
+  end
+
+  # Process every object from the resource.
+  def all(resource, options = {}, &block)
     if options[:query] && options[:query][:page]
-      raise "Don't pass 'page' to Itemlogic#all"
+      raise "Don't pass 'page' to Itemlogic#all, use Itemlogic#resource_single_page"
     end
 
     page = 0
     results = []
-    single_page = false
-    # If we send along a request for a specific page it means we want that single page only
-    unless _options[:query][:page].nil?
-      if _options[:query][:page].to_i > 0
-        single_page = true
-        page = _options[:query][:page].to_i - 1 # avoid changing code in the begin block :P
-      end
-    end
     begin
-      _options[:query][:page] = page + 1
-      result, response = self.send(resource, _options)
+      result = fetch_single_page(page, resource, options)
       if resource['screenshot']
         results = result
         break
       end
       if result == false
         break
-      end
-      if !result.is_a?(Hash)
-        raise "Expected %s to be a hash" % [result, response].inspect
       end
       if result['code'] && result['code'].to_s != '200'
         next
@@ -148,9 +148,7 @@ class Itemlogic
       else
         results.concat(page_results)
       end
-      # making sure loop will end in non single page requests
-      single_page = true if single_page == false && page == page_count
-    end while page && page < page_count && !single_page
+    end while page && page < page_count
     if block
       return true
     else
