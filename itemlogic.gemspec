@@ -1,10 +1,10 @@
 Gem::Specification.new do |s|
   s.name        = 'itemlogic'
-  s.version     = '0.1.8'
-  s.date        = '2015-08-03'
+  s.version     = '0.1.9'
+  s.date        = '2018-03-15'
   s.summary     = "ItemLogic API"
   s.description = "Ruby gem for the ItemLogic API"
-  s.authors     = ["Thomas R. Koll"]
+  s.authors     = ["Thomas R. Koll", "Sebastian Sierra"]
   s.email       = 'tomk@naiku.net'
   s.files       = [
     "lib/itemlogic.rb",
