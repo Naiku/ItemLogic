@@ -109,7 +109,7 @@ class Itemlogic
   def fetch_single_page(page, resource, options = {})
     _options = options.dup
     _options[:query] ||= {}
-    _options[:query][:page] = page + 1
+    _options[:query][:page] = page.to_i + 1
     result, response = self.send(resource, _options)
     if result == false
       return
